@@ -1,0 +1,15 @@
+{
+  "name": "chatapp",
+  "version": "1.0.0",
+  "description": "Chat App made using socket.io",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Reneicko Getten",
+  "license": "ISC",
+  "dependencies": {
+    "mongodb": "^3.0.1",
+    "socket.io": "^2.0.4"
+  }
+}

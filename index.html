@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="css/materialize.css">
+  <style>
+  .height-300{
+      height: 300px;
+  }
+  </style>
+</head>
+<body>
+    <div class="container">
+<div class="row">
+    <div class="col s6 l12">
+        <h1 class="center-align">
+            Chat
+            <a id="clear" class="waves-effect waves-light btn">clear</a>
+        </h1>
+        <div id="status"></div>
+        <div id="chat">
+<input type="text" name="" id="username" class="input-field" placeholder="Enter name">
+
+<div class="card-panel teal height-300">
+    <br>
+    <span class="white-text messages">
+    </span>
+   
+</div>
+<br>
+<div class="input-field">
+<textarea id="textarea1" class="materialize-textarea txtarea"></textarea>
+<label for="textarea1">Message</label>
+</div>
+        </div>
+    </div>
+</div>
+    </div>
+
+    <script src="js/socket.io.js"></script>
+    <script src="js/jquery.min.js"></script>
+    <script>
+    (function(){
+
+        let status=$("#status");
+        let message=$("#messages");
+        let textarea=$(".txtarea");
+        let username=$("#username");
+        let clear=$("#clear");
+
+        //Set Default Status
+
+        let statusDefault=status.text('');
+
+        let setStatus=function(s){
+//Set Status
+
+status.text(s)
+
+if(s!==statusDefault)
+{
+    let delay=setTimeout(function(){
+        setStatus(statusDefault)
+    },4000);
+}
+        }
+
+//Connect to socket.io
+
+let socket=io.connect('http://127.0.0.1:4000');
+
+//check for connection
+
+if(socket!==undefined){
+    console.log('Connected to socket');
+
+    socket.on('output',function(data){
+console.log(data);
+    })
+}
+
+    })();
+    </script>
+
+</body>
+</html>
