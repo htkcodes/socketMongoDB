@@ -9,7 +9,7 @@
   "author": "Reneicko Getten",
   "license": "ISC",
   "dependencies": {
-    "mongodb": "^3.0.1",
+    "mongodb": "^2.2.33",
     "socket.io": "^2.0.4"
   }
 }

@@ -10,6 +10,9 @@
   .height-300{
       height: 300px;
   }
+  .scroll{
+      overflow-y: scroll;
+  }
   </style>
 </head>
 <body>
@@ -24,7 +27,7 @@
         <div id="chat">
 <input type="text" name="" id="username" class="input-field" placeholder="Enter name">
 
-<div class="card-panel teal height-300">
+<div class="card-panel teal height-300 scroll">
     <br>
     <span class="white-text messages">
     </span>
@@ -32,8 +35,8 @@
 </div>
 <br>
 <div class="input-field">
-<textarea id="textarea1" class="materialize-textarea txtarea"></textarea>
-<label for="textarea1">Message</label>
+<textarea id="textarea1" class="materialize-textarea txtarea" placeholder="Enter Message"></textarea>
+
 </div>
         </div>
     </div>
@@ -42,11 +45,13 @@
 
     <script src="js/socket.io.js"></script>
     <script src="js/jquery.min.js"></script>
+
     <script>
+    
     (function(){
 
         let status=$("#status");
-        let message=$("#messages");
+        let message=$(".messages");
         let textarea=$(".txtarea");
         let username=$("#username");
         let clear=$("#clear");
@@ -57,16 +62,16 @@
 
         let setStatus=function(s){
 //Set Status
-
 status.text(s)
 
-if(s!==statusDefault)
-{
-    let delay=setTimeout(function(){
-        setStatus(statusDefault)
-    },4000);
-}
+                setTimeout(function(){
+            $("#status").text('');
+},4000)
+
+
         }
+
+   
 
 //Connect to socket.io
 
@@ -76,10 +81,55 @@ let socket=io.connect('http://127.0.0.1:4000');
 
 if(socket!==undefined){
     console.log('Connected to socket');
-
+//Displays Messages
     socket.on('output',function(data){
+
+        if(data.length){
+            for(let i=0;i<data.length;i++)
+            {
+                let msg=message.prepend(`<div class='chat-message'>`+data[i].name + ": "+ data[i].message+`</div>`)
+            }
+        }
+
 console.log(data);
+    });
+    //Get Server Status
+    socket.on('status',function(data){
+        //Get msg status
+
+        setStatus((typeof data==='object')? data.message:data);
+
+        //If status is clear,clear text
+
+        if(data.clear)
+        {
+            textarea.text('');
+        }
+    });
+
+    //Handle input msgs
+
+    textarea.keydown(function(e){
+        if(e.which===13 && e.shiftKey==false)
+        {
+//Send to server
+socket.emit('input',{
+    name:username.val(),
+    message:textarea.val()
+})
+e.preventDefault();
+        }
     })
+    clear.on('click',function(){
+        socket.emit('clear');
+    });
+
+    //CLEAR MSG
+
+    socket.on('cleared',function(){
+        $(".chat-message").remove();
+        $(".txtarea").val('');
+    });
 }
 
     })();

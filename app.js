@@ -64,7 +64,7 @@ mongo.connect('mongodb://127.0.0.1/oki', function (err, db) {
 
         //Handle Clear
 
-        socket.io('clear', function (data) {
+        socket.on('clear', function (data) {
             //Remove all chats from collection
             chat.remove({}, function () {
                 socket.emit('cleared');
